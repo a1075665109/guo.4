@@ -1,3 +1,9 @@
+commit 14ce4f19e9809ff35f1859aebf73efdba61cc1d2
+Author: Yanchen Guo <guo@hoare7.cs.umsl.edu>
+Date:   Thu Oct 24 17:16:11 2019 -0500
+
+    process block assignement and child process execution
+
 commit d978cc88f33094e47db2e8814bb696f922e2784f
 Author: Yanchen Guo <guo@hoare7.cs.umsl.edu>
 Date:   Thu Oct 24 16:10:50 2019 -0500
