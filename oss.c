@@ -4,7 +4,13 @@
 #include <sys/shm.h>
 #include <unistd.h>
 
+#define maxTimeNS 1000000000
+#define maxtimeS 1
+
 char *outputFile;
+int maxTime;
+int maxProcess = 10;
+FILE *ofp;
 
 // process control block structure
 struct pcb{
@@ -12,6 +18,7 @@ struct pcb{
 	float total_time;
 	int burst_time;
 	int pid;
+	int priority;
 };
 
 // clock structure;
@@ -25,25 +32,51 @@ struct clock* clock;
 struct pcb* pcb;
 
 
+// alarm that kills all processes;
+void alarmHandler(int sig){
+        FILE *fp;
+        fp = fopen(outputFile,"a");
+        fprintf(fp,"Master process terminated after the the maximum amount of time: %dseconds\n",maxTime);
+        fclose(fp);
+        int i=0;
+        // kill all the child process
+	while(i <18){
+		if(pcb[i]->pid>0){
+			kill(pcb[i]->pid,SIGTERM);
+		}
+	}
+	kill(getpid(),SIGTERM);
+}
+
 int main(int argc, char* argv[]){
+	signal(SIGALRM,alarmHandler);	
 	int opt;
 	outputFile = "logFile";
-	
+	maxTime = 3;	
+	int childSpot;
+
+
 	// command line options.
-	while((opt = getopt(argc,argv,"hf:"))!=-1){
+	while((opt = getopt(argc,argv,"ht:f:"))!=-1){
                 switch(opt){
                         case 'h':
-				printf("\n the command line options are -h and -f\n");
+				printf("\n the command line options are -h,t and -f\n");
+				printf("use -t with an argument followed by it to change the max time the program should run\n");
 				printf("use -f with an argument followed by it to change the output log file\n");
 				break;
                         case 'f':
 				outputFile = optarg;	
                                 break;
+			case 't':
+				maxTime = atoi(optarg);
+				break;
 			case '?':
                                 break;
                 }
         }
 
+	ofp = fopen(outputFile,"a");
+	alarm(maxTime);
 	// initializing shared memory for 18 process control blocks
 	int pcbid;
         int pctsize = 18 * sizeof(pcb);
@@ -65,6 +98,7 @@ int main(int argc, char* argv[]){
 		pcb[i].total_time = 0.0;
 		pcb[i].burst_time = 0;
 		pcb[i].pid = -1;
+		pcb[i].priority = -1;
 		i =i+1;
 	}
 
@@ -83,10 +117,66 @@ int main(int argc, char* argv[]){
         }
 	clock->sec=0;
 	clock->nano_sec=0;
+	
+	// loop that finds a random time then fork a child afterwards
+	srand(time(0));
+	int picked = 0;
 
+	// infinite loop that will exit when the alarm goes off;
+	while(true){
+		unsigned int s; 
+		unsigned int ns;
 
+		// picks a random time interval then fork a child after it has passed.
+		if(picked == 0){
+			s = clock->sec + rand()%1+1;
+			ns = clock->nano_sec + rand()%(10000000000)+1;
+			if(ns>= maxTimeNS){
+				s = s+1;
+				ns = ns-maxTimeNS;
+			}
+			picked == 1;
+		}
+		// clock will continue to run.
+		clock->nano_sec = clock->nano_sec +1000;
+                if(clock->nano_sec >= maxTimeNS){
+                        clock->sec = clock->sec +1;
+                        clock->nano_sec =0;
+                }
+		
+		// if the amount of time interval has passed and it is time to start another process
+		if(clock->sec >= s && picked == 1){
+			if(clock->nano_sec >= ns){
+				// set picked to 0 then 
+				picked = 0;
 
+				// if max child is not exceeded, find a spot on the table then spawn another process;
+				if(maxProcess >0){
+					maxProcess = maxProcess -1;
+					// look for a empty spot on the process control table, store the forked process info;		
+					int i =0;
+       					while(i<18){
+                				if(pcb[i].pid == -1){
+                        				pcb[i].pid = child_pid;
+							pcb[i].priority = rand()%3+1;
+							pcb[i].priority -= 1;			
+						}
+					}
+					// spawn the process to execute the user executable.
+					child_pid = fork();
+                                        if(child_pid <=0){
+                                                execvp("./user");
+                                                exit(0);
+                                        }
+				
+				}
+				fprinf(ofp,"OSS: Generating process PID: %d, priority level: %d, at time: %d:%d\n",
+						pcb[i].pid,pcb[i].priority,clock->sec,clock->nano_sec);
+				
+			}
+		}
 
-
+	}
 	return 0;	
+
 }
