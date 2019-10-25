@@ -119,7 +119,7 @@ int main(int argc, char* argv[]){
         }
 	clock->sec=0;
 	clock->nano_sec=0;
-	clock->quantum =1.0;	
+	clock->quantum =0.5;	
 	// child process argument for shared memory
 	char arg1[11];
 	char arg2[11];	
@@ -171,8 +171,7 @@ int main(int argc, char* argv[]){
                 				if(pcb[i].pid == -1){
 							childSpot = i;
                         				pcb[i].pid = child_pid;
-							pcb[i].priority = rand()%3+1;
-							pcb[i].priority -= 1;			
+							pcb[i].priority = 0;
 							break;
 						}
 						i+=1;

@@ -109,15 +109,19 @@ int main(int argc, char *argv[]){
 	if(a == 0){
 		fprintf(fp,"OSS: process %d exited immediately at time %d.%d\n",pid,clock->sec,clock->nano_sec);
 		fclose(fp);
+		pcb[childSpot].pid = -1;
+		pcb[childSpot].priority =0;
 		exit(0);
         }
-	// go through with the time quantum on 1
+	// go through with the time quantum on 0.5
         if(a == 1){
                 float time = clock->quantum;
-         	fprintf(fp,"OSS: Process %d executing for full quantum time %f \n",pid,time);
+         	fprintf(fp,"OSS: Dispatching process %d for full quantum time %f \n",pid,time);
 		sleep(time);
-		fprintf(fp,"OSS: Process %d terminated, it has finished its full quantum time\n",pid);
-        	fclose(fp);
+		fprintf(fp,"OSS: Process %d dispatched, it has finished its full quantum time\n",pid);
+        	pcb[childSpot].pid = -1;
+                pcb[childSpot].priority =0;
+		fclose(fp);
 	}
 	// wait for event for r.s second
         if(a == 2){
@@ -126,15 +130,25 @@ int main(int argc, char *argv[]){
 		s = s/1000;
 		float time = r+s;
 		fprintf(fp,"OSS: Process %d waiting for event for %f seconds\n",pid,time);
+		if(time >1 && time < 3){
+			fprintf(fp,"OSS: Process %d moved to priority queue 1 because it has to wait for %f",pid,time);
+                        pcb[childSpot].priority = 1;
+		}
+		if(time >= 3){
+			fprintf(fp,"OSS: Process %d moved to priority queue 2 because it has to wait for %f",pid,time);
+			pcb[childSpot].priority = 2;
+		}
+		
 		sleep(time);
-		fprintf(fp,"OSS: Process %d has finished waiting for an event\n",pid);
-        	fclose(fp);
+		fprintf(fp,"OSS: Process %d dispatched at time %d.%d\n",pid,clock->sec,clock->nano_sec);
+        	pcb[childSpot].pid = -1;
+                pcb[childSpot].priority =0;
+		fclose(fp);
 	}
 	// uses p amount of ites assigned quantum
 	if(a == 3){
 		float p = rand()%99+1;
 		float time = clock->quantum *(p/100);	
-		
 		fprintf(fp,"OSS: Process %d executing for %.0f percent of the quantum time, allowed time: %f \n",pid,p,time);	
 		sleep(time);
 		fprintf(fp,"OSS: Process %d terminated after finishing its allowed quantum time: %f \n",pid,time);

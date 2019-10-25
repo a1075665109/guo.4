@@ -1,0 +1,26 @@
+Yanchen Guo
+CS 4760
+Project 4
+
+For this project, compile it by first enter the command "make"
+It then creates an executable called "oss" and another called "user".
+Running the project by calling "./oss".
+It could also be ran with these command line arguments "-h -t".
+
+-h: displays all the avaliable command line arguments for this project then runs the program.
+-t: give a integer after -t to change the dafault running time of the main program from 3seconds to given integer seconds.
+
+
+Some problems I ran into while programming that took a long time to solve:
+        1. shared memory creation access through different exec commands
+        2. implementing variables of different type (float,char,int) caused trouble when I wasn't careful with the format of printf/fprintf
+        3. random number generator between difference process while they are generated super fastly.
+	3. had huge trouble implementing the msg queue, program could not work with it so I decided to leave it out.
+	 
+
+
+Version control through github, all the logs could be found under log.txt within the directory.
+
+make clean command will remove the executable and the default output file.
+~
+
