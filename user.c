@@ -114,11 +114,9 @@ int main(int argc, char *argv[]){
 	// go through with the time quantum on 1
         if(a == 1){
                 float time = clock->quantum;
-         	fprintf(fp,"OSS: Process %d executing for full quantum time %f seconds\n",pid,time);
-	        fclose(fp);
+         	fprintf(fp,"OSS: Process %d executing for full quantum time %f \n",pid,time);
 		sleep(time);
-		fp = fopen("logFile","a");
-		fprintf(fp,"OSS: Process %d finished its full quantum time\n",pid);
+		fprintf(fp,"OSS: Process %d terminated, it has finished its full quantum time\n",pid);
         	fclose(fp);
 	}
 	// wait for event for r.s second
@@ -128,22 +126,18 @@ int main(int argc, char *argv[]){
 		s = s/1000;
 		float time = r+s;
 		fprintf(fp,"OSS: Process %d waiting for event for %f seconds\n",pid,time);
-		fclose(fp);
 		sleep(time);
-		fp = fopen("logFile","a");
 		fprintf(fp,"OSS: Process %d has finished waiting for an event\n",pid);
         	fclose(fp);
 	}
 	// uses p amount of ites assigned quantum
 	if(a == 3){
 		float p = rand()%99+1;
-		float time = clock->quantum *(p/100);
-		time = time;
-		fprintf(fp,"OSS: Process %d executing for %d percent of the quantum time, allowed time: %f\n",pid,p,time);
-		fclose(fp);
+		float time = clock->quantum *(p/100);	
+		
+		fprintf(fp,"OSS: Process %d executing for %.0f percent of the quantum time, allowed time: %f \n",pid,p,time);	
 		sleep(time);
-		fp = fopen("logFile","a");
-		fprintf(fp,"OSS: Process %d has finished its allowed quantum time: %f seconds \n",pid,time);
+		fprintf(fp,"OSS: Process %d terminated after finishing its allowed quantum time: %f \n",pid,time);
 		fclose(fp);
 	}
 	return 0;

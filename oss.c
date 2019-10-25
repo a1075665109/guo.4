@@ -61,21 +61,20 @@ int main(int argc, char* argv[]){
 
 
 	// command line options.
-	while((opt = getopt(argc,argv,"ht:f:"))!=-1){
+	while((opt = getopt(argc,argv,"ht:"))!=-1){
                 switch(opt){
                         case 'h':
-				printf("\n the command line options are -h,t and -f\n");
+				printf("\n-h is used for listing the available command line arguments\n");
+				printf("the command line options are -h and -t\n");
 				printf("use -t with an argument followed by it to change the max time the program should run\n");
-				printf("use -f with an argument followed by it to change the output log file\n");
-				break;
-                        case 'f':
-				outputFile = optarg;	
-                                break;
+				printf("\nprogram terminated\n\n");
+				return 0;
 			case 't':
 				maxTime = atoi(optarg);
 				break;
 			case '?':
-                                break;
+                        	printf("\n Invalid arguments, please use option -h for help, program terminated\n");
+				return 0;
                 }
         }
 
