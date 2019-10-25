@@ -122,10 +122,10 @@ int main(int argc, char* argv[]){
 	clock->nano_sec=0;
 	clock->quantum =1;	
 	// child process argument for shared memory
-	char arg1[10];
-	char arg2[10];	
-	snprintf(arg1,10,"%d", pcbid);
-	snprintf(arg2,10,"%d",clockid);
+	char arg1[11];
+	char arg2[11];	
+	snprintf(arg1,11,"%d", pcbid);
+	snprintf(arg2,11,"%d",clockid);
 
 	srand(time(0));
 	int picked = 0;
@@ -161,8 +161,9 @@ int main(int argc, char* argv[]){
 					maxProcess = maxProcess -1;
 					int child_pid = fork();
                                         if(child_pid <=0){
-                                                printf("hello\n");
-						execlp("./user","./user",arg1,arg2,(char *)NULL);
+						execvp("./user",NULL);
+						//printf("%d,%d\n",arg1,arg2);
+						//execlp("./user","./user",arg1,arg2,(char *)NULL);
 						exit(0);
                                         }
 					// look for a empty spot on the process control table, store the forked process info;		

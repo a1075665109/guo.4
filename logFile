@@ -1,0 +1,5 @@
+OSS: Generating process PID: 18424, priority level: 0, at time: 1:146007000
+OSS: Process 18424 executing for 66 percent of the quantum time, allowed time: 
+OSS: Generating process PID: 18425, priority level: 2, at time: 1:811089000
+OSS: Process 18425 executing for 66 percent of the quantum time, allowed time: 
+OSS: Master process terminated after the the maximum amount of time: 3seconds
