@@ -1,3 +1,9 @@
+commit e339928b471772022c738212bb493b6119bdd9d6
+Author: Yanchen Guo <guo@hoare7.cs.umsl.edu>
+Date:   Thu Oct 24 19:03:59 2019 -0500
+
+    priority and time quantum
+
 commit c93d44db992d16d570f1a03d193f120beb44ff58
 Author: Yanchen Guo <guo@hoare7.cs.umsl.edu>
 Date:   Thu Oct 24 18:33:12 2019 -0500

@@ -120,7 +120,7 @@ int main(int argc, char* argv[]){
         }
 	clock->sec=0;
 	clock->nano_sec=0;
-	clock->quantum =1;	
+	clock->quantum =1.0;	
 	// child process argument for shared memory
 	char arg1[11];
 	char arg2[11];	
@@ -180,7 +180,7 @@ int main(int argc, char* argv[]){
 					}				
 				}
 				ofp = fopen(outputFile,"a");
-				fprintf(ofp,"OSS: Generating process PID: %d, priority level: %d, at time: %d:%d\n",
+				fprintf(ofp,"OSS: Generating process PID: %d, priority level: %d, at time: %d.%d\n",
 						pcb[childSpot].pid,pcb[childSpot].priority,clock->sec,clock->nano_sec);
 				fclose(ofp);
 				
